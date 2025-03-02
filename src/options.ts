@@ -1,10 +1,13 @@
-// Save options to chrome.storage
-function saveOptions() {
+async function saveOptions() {
     const apiKey = (document.getElementById('apiKey') as HTMLInputElement).value.trim();
-    const statusElement = document.getElementById('status');
 
     if (!apiKey) {
         showStatus('Please enter your OpenAI API key', 'error');
+        return;
+    }
+
+    const isValid = await verifyApiKey(apiKey);
+    if (!isValid) {
         return;
     }
 
@@ -15,6 +18,28 @@ function saveOptions() {
             showStatus('API key saved successfully!', 'success');
         }
     });
+}
+
+async function verifyApiKey(apiKey: string): Promise<boolean> {
+    try {
+        const response = await fetch('https://api.openai.com/v1/models', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${apiKey}`
+            }
+        });
+
+        if (response.ok) {
+            return true;
+        } else {
+            const errorData = await response.json();
+            showStatus(`Verification failed: ${errorData.error.message}`, 'error');
+            return false;
+        }
+    } catch (error: any) {
+        showStatus(`Verification error: ${error.message}`, 'error');
+        return false;
+    }
 }
 
 // Restore options from chrome.storage
