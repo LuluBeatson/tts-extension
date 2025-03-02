@@ -1,0 +1,18 @@
+{
+    "name": "tts-extension",
+    "version": "1.0.0",
+    "description": "A Chrome extension that uses OpenAI's TTS API.",
+    "main": "dist/background.js",
+    "scripts": {
+        "build": "node build.js",
+        "watch": "tsc --watch",
+        "start": "npm run build && npm run watch"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "@types/chrome": "^0.0.123",
+        "@types/node": "^22.13.8",
+        "esbuild": "^0.20.1",
+        "typescript": "^4.0.0"
+    }
+}
